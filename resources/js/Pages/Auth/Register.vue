@@ -1,14 +1,22 @@
 <script setup>
 
 import { useForm } from '@inertiajs/vue3';
+import TextInput from '../Components/TextInput.vue';
 
 
 const form = useForm({
+    avatar: null,
     name: null,
     email: null,
     password: null,
     password_confirmation: null,
-})
+    preview: null
+});
+
+const change = (e) => {
+    form.avatar = e.target.files[0];
+    form.preview = URL.createObjectURL(e.target.files[0]);
+};
 
 const submit = () => {
   form.post('/register', {
@@ -22,28 +30,23 @@ const submit = () => {
     <h1 class="title">Register a new account</h1>
     <div class="w-2/4 mx-auto">
         <form @submit.prevent="submit">
-            <div class="mb-6">
-                <label>Name</label>
-                <input type="text" v-model="form.name">
-                <small class="text-red-500">{{ form.errors.name }}</small>
+            <div class="grid place-items-center">
+                <div class="relative w-28 h-28 rounded-full overflow-hidden border border-slate-300">
+                    <label for="avatar" class="absolute inset-0 grid content-end cursor-pointer">
+                        <span class="bg-white/70 pb-2 text-center">Avatar</span>
+                    </label>
+                    <input type="file" id="avatar" @input="change" hidden/>
+                    <img class="object-cover w-28 h-28" :src="form.preview ?? 'storage/avatars/default.png'" alt="">
+                </div>
+                <p class="error mt-2">{{ form.errors.avatar }}</p>
             </div>
-            <div class="mb-6">
-                <label>Email</label>
-                <input type="text" v-model="form.email">
-                <small class="text-red-500">{{ form.errors.email }}</small>
-            </div>
-            <div class="mb-6">
-                <label>Password</label>
-                <input type="password" v-model="form.password">
-                <small class="text-red-500">{{ form.errors.password }}</small>
-            </div>
-            <div class="mb-6">
-                <label>Confirm Password</label>
-                <input type="password" v-model="form.password_confirmation">
-                <small class="text-red-500">{{ form.errors.password_confirmation }}</small>
-            </div>
+
+            <TextInput name="Name" v-model="form.name" :message="form.errors.name"/>
+            <TextInput name="Email" type="email" v-model="form.email" :message="form.errors.email"/>
+            <TextInput name="Password" type="password" v-model="form.password" :message="form.errors.password"/>
+            <TextInput name="Password Confirmation" type="password" v-model="form.password_confirmation"/>
             <div>
-                <p class="text-slate-600 mb-2">Already a user? <a href="" class="text-blue-500">login</a></p>
+                <p class="text-slate-600 mb-2">Already a user? <a href="/login" class="text-blue-500">login</a></p>
             </div>
             <button class="primary-btn" :disabled="form.processing">Register</button>
         </form>

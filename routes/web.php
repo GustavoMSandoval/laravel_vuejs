@@ -5,11 +5,27 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    return inertia('Home', ['user' => 'Gustavo']);
+    return inertia('Home');
 })->name('home');
 
-Route::inertia('/about','About')->name('about');
+ Route::inertia('/about','About')->name('about');
 
-Route::inertia('/register', 'Auth/Register')->name('register');
+Route::middleware('auth')->group(function() {
 
-Route::post('/register', [AuthController::class, 'register']);
+    Route::inertia('/dashboard', 'Dashboard')->name('dashboard');
+    
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+
+Route::middleware('guest')->group(function() {
+   
+    Route::inertia('/register', 'Auth/Register')->name('register');
+    
+    Route::post('/register', [AuthController::class, 'register']);
+    
+    Route::inertia('/login', 'Auth/Login')->name('login');
+    
+    Route::post('/login', [AuthController::class, 'login']);
+
+});
+

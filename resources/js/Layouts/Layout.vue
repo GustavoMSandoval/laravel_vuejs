@@ -1,30 +1,24 @@
 <script setup>
 
-        const navLinks = [
-            {
-                link: 'home' ,
-                name: 'Home',
-            
-            },
-            {
-                link : 'about',
-                name : 'About',
-            },
-            {
-                link: 'register',
-                name: 'Register'
-            }
-        ]
 
 </script>
 <template>
     <Head :title="` | ${$page.component}`"/>
     <div>
-        <header class="p-5 bg-blue-900">
+        <header class="bg-blue-1000 text-white">
             <nav class="flex">
-                <div v-for="navLink in navLinks" :key="navLink.name">
-                   <Link class="p-4 text-white"  :href="route(navLink.link)">{{ navLink.name }}</Link>
-                   
+                <div class="flex gap-2">
+                    <Link :href="route('home')" class="nav-link" :class="{'bg-slate-700': $page.component === 'Home'}">Home</Link>
+                    <Link :href="route('about')" class="nav-link" :class="{'bg-slate-700': $page.component === 'About'}">About</Link>
+                </div>
+                <div v-if="$page.props.auth.user" class="flex gap-2 items-center">
+                    <img class="avatar"  :src="$page.props.auth.user.avatar ? ('storage/' + $page.props.auth.user.avatar): ('storage/avatars/default.png')" alt="">
+                    <Link :href="route('dashboard')" class="nav-link" :class="{'bg-slate-700': $page.component === 'Dashboard'}">Dashboard</Link>
+                    <Link :href="route('logout')" class="nav-link" method="post" as="button" type="button" >Logout</Link>
+                </div>
+                <div v-else class="flex gap-2">
+                    <Link :href="route('login')" class="nav-link" :class="{'bg-slate-700': $page.component === 'Auth/Login'}">Login</Link>
+                    <Link :href="route('register')" class="nav-link" :class="{'bg-slate-700': $page.component === 'Auth/Register'}">Register</Link>
                 </div>
             </nav>
         </header>

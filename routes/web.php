@@ -1,14 +1,31 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function(Request $request) {
+    return inertia('Home', [
+        'users' => User::when($request->search, function($query) use ($request) {
+            $query
+            ->where('name', 'like', '%' . $request->search . '%')//os símbolos concatenados ajudam a melhorar a filtragem
+            ->orWhere('email', 'like', '%' . $request->search . '%');
+        })->paginate(5)->withQueryString(),
 
-Route::get('/', function () {
-    return inertia('Home');
+        'searchTerm' => $request->search,
+
+        'can' => [
+            'delete_user' => 
+                Auth::user() ? 
+                    Auth::user()->can('delete', User::class) : 
+                    null
+        ]
+    ]);
 })->name('home');
 
- Route::inertia('/about','About')->name('about');
+Route::inertia('/about','About')->name('about');
 
 Route::middleware('auth')->group(function() {
 

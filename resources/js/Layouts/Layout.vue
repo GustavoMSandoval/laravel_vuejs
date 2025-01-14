@@ -17,8 +17,8 @@
                     <Link :href="route('logout')" class="nav-link" method="post" as="button" type="button" >Logout</Link>
                 </div>
                 <div v-else class="flex gap-2">
-                    <Link :href="route('login')" class="nav-link" :class="{'bg-slate-700': $page.component === 'Auth/Login'}">Login</Link>
                     <Link :href="route('register')" class="nav-link" :class="{'bg-slate-700': $page.component === 'Auth/Register'}">Register</Link>
+                    <Link :href="route('login')" class="nav-link" :class="{'bg-slate-700': $page.component === 'Auth/Login'}">Login</Link>
                 </div>
             </nav>
         </header>

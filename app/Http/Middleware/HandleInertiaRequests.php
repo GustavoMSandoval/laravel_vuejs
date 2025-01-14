@@ -40,6 +40,9 @@ class HandleInertiaRequests extends Middleware
                 'auth.user' => fn () => $request->user()
                     ? $request->user()->only('id','avatar' ,'name')
                     : null,//isso compartilha o que será mostrado ao usuário
+                'flash' => [
+                    'greet' => fn () => $request->session()->get('greet')
+                ],
                     
         ]);
     }
